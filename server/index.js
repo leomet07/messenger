@@ -4,6 +4,7 @@ const helmet = require("helmet");
 const morgan = require("morgan");
 const dotenv = require("dotenv").config();
 const handlers = require("./routes/io/handlers");
+const mongoose = require("mongoose");
 const app = express();
 
 var http = require("http").createServer(app);
@@ -26,6 +27,21 @@ app.use(cors());
 app.use(express.json());
 app.use(helmet());
 app.use(morgan("tiny"));
+
+const db_str = process.env.DB_CONNECT;
+console.log(db_str);
+mongoose.connect(
+	db_str,
+	{
+		useNewUrlParser: true,
+		useUnifiedTopology: true,
+		useFindAndModify: false,
+		useCreateIndex: true,
+	},
+	() => {
+		console.log("connected to db!");
+	}
+);
 
 // import Routes
 const apiRouter = require("./routes/api").router;
