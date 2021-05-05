@@ -6,7 +6,7 @@ const dotenv = require("dotenv").config();
 const handlers = require("./routes/io/handlers");
 const mongoose = require("mongoose");
 const app = express();
-
+const middlewares = require("./middlewares");
 var http = require("http").createServer(app);
 
 const io = require("socket.io")(http, {
@@ -51,6 +51,10 @@ app.use("/api/", apiRouter);
 app.get("/", function (req, res) {
 	res.send("Hello World to Server");
 });
+
+// Configure a middleware for 404s and the error handler
+app.use(middlewares.notFound);
+app.use(middlewares.errorHandler);
 
 http.listen(process.env.PORT || 3000, function () {
 	var host = http.address().address;
