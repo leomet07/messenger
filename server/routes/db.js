@@ -1,12 +1,8 @@
 const router = require("express").Router();
 const Message = require("../model/Message");
 
-Message.watch().on("change", (change) => {
-	console.log("Something has changed");
-	console.log(change);
-});
 router.get("/get_messages", async (req, res) => {
-	let messages = await Message.find({});
+	let messages = await get_messages({});
 	res.json({
 		messages: messages,
 		description: "Successfully retrieved all of the messages.",
@@ -14,9 +10,7 @@ router.get("/get_messages", async (req, res) => {
 });
 router.post("/create_message", async (req, res, next) => {
 	try {
-		console.log(req.body);
-		let message = await Message.create(req.body);
-		let saved_message = await message.save();
+		const saved_message = await create_message(req.body);
 		res.json({
 			message: saved_message,
 			description: "Successfully created the message.",
@@ -56,8 +50,24 @@ async function delete_message(query) {
 		throw new Error(`Message of ${JSON.stringify(query)} does not exist`);
 	}
 }
+async function create_message(query) {
+	let message = await Message.create(query);
+	let saved_message = await message.save();
+	return saved_message;
+}
 
+async function get_messages(query) {
+	return await Message.find(query);
+}
+
+Message.watch().on("change", (change) => {
+	const io = require("../index").io;
+	console.log("Something has changed", change);
+	if (change.operationType == "insert") {
+		io.emit("new_message", change.fullDocument);
+	}
+});
 router.get("/", async (req, res) => {
 	res.json({ message: "Base route for the db route." });
 });
-module.exports.router = router;
+module.exports = { router, get_messages };

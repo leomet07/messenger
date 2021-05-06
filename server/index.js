@@ -8,7 +8,6 @@ const mongoose = require("mongoose");
 const app = express();
 const middlewares = require("./middlewares");
 var http = require("http").createServer(app);
-
 const io = require("socket.io")(http, {
 	cors: {
 		origin: "*",
@@ -63,7 +62,8 @@ http.listen(process.env.PORT || 3000, function () {
 });
 
 io.on("connection", (client) => {
-	console.log("socket connection", client);
+	console.log("socket connection");
+	handlers.handleuser(client, io);
 });
 
 module.exports.io = io;
