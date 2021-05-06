@@ -8,7 +8,6 @@
 	let socket = io('http://localhost:6969');
 	window.socket = socket;
 	
-
 	window.socket.on("connect", function (data) {
 		console.log("connected to server");
 	});
@@ -25,7 +24,7 @@
 	</nav>
 	<div>
 	  
-	  <Route path="about" component="{About}" />
+	  <Route path="about"><About/> </Route>
 	  <Route path="/"><Home /></Route>
 	</div>
   </Router>
