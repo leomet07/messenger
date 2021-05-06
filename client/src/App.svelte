@@ -25,7 +25,7 @@
 	</nav>
 	<div>
 	  
-	  <Route path="about"><About/> </Route>
+	  <Route path="about" component="{About}" />
 	  <Route path="/"><Home /></Route>
 	</div>
   </Router>
