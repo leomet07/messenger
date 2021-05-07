@@ -1,11 +1,11 @@
 {
-	"name": "client",
+	"name": "svelte-app",
 	"version": "1.0.0",
 	"private": true,
 	"scripts": {
 		"build": "rollup -c",
 		"dev": "rollup -c -w",
-		"start": "sirv public --no-clear --single"
+		"start": "sirv public -s"
 	},
 	"devDependencies": {
 		"@rollup/plugin-commonjs": "^17.0.0",
@@ -20,6 +20,6 @@
 	"dependencies": {
 		"sirv-cli": "^1.0.0",
 		"socket.io-client": "^4.0.2",
-		"svelte-routing": "^1.6.0"
+		"svelte-router-spa": "^6.0.2"
 	}
 }
