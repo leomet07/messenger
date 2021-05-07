@@ -15,10 +15,19 @@
 		});
   	
 	}());
-</script>
+
+	async function create_message(){
+		console.log("Clicked")
+		window.socket.emit("create_message", {text : "Browser emit"})
+	}</script>
 <h1>Home</h1>
 <ul>
 {#each $messages as message}
 	<li>{message.text}</li>
 {/each}
+
+<button on:click={create_message}>
+	Click me
+</button>
+
 </ul>

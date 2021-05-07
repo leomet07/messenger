@@ -70,4 +70,4 @@ Message.watch().on("change", (change) => {
 router.get("/", async (req, res) => {
 	res.json({ message: "Base route for the db route." });
 });
-module.exports = { router, get_messages };
+module.exports = { router, get_messages, create_message };
