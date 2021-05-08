@@ -4,7 +4,7 @@
 
 	(async function () {
 		console.log("On home")
-		const retrieved_messages = (await(await fetch("http://127.0.0.1:6969/api/db/get_messages")).json()).messages;
+		const retrieved_messages = (await(await fetch(window.BASE_URL + "/api/db/get_messages")).json()).messages;
 		$messages = retrieved_messages;
 	
 		
