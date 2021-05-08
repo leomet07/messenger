@@ -1,5 +1,7 @@
 <script>
 	import { messages } from '../stores';
+	let input_message;
+
 	(async function () {
 		console.log("On home")
 		const retrieved_messages = (await(await fetch("http://127.0.0.1:6969/api/db/get_messages")).json()).messages;
@@ -16,18 +18,29 @@
   	
 	}());
 
-	async function create_message(){
+	async function create_message(e){
+		e.preventDefault()
 		console.log("Clicked")
-		window.socket.emit("create_message", {text : "Browser emit"})
-	}</script>
-<h1>Home</h1>
-<ul>
-{#each $messages as message}
-	<li>{message.text}</li>
-{/each}
+		window.socket.emit("create_message", {text : input_message})
+	}
+</script>
 
-<button on:click={create_message}>
-	Click me
-</button>
+<main id ="main">
+	<h1 id="quirky">Home</h1>
+	<div>
+	{#each $messages as message}
+		<p>{message.text}</p>
+	{/each}
+	</div>
+	<form on:submit={create_message} >
+		<input bind:value={input_message} />
+		<input type= "submit" text="Send"/>
+			
+		
+	</form>
+</main>
 
-</ul>
+
+<style>
+
+</style>

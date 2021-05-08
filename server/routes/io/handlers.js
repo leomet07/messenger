@@ -6,8 +6,9 @@ async function handleuser(user, io) {
 		console.log("user disconnected");
 	});
 
-	user.on("create_message", async () => {
-		console.log("create message handler file");
+	user.on("create_message", async (data) => {
+		console.log("create message handler file", data);
+		let saved_message = await db.create_message(data);
 	});
 }
 

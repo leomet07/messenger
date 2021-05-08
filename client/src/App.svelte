@@ -5,6 +5,12 @@
 	import About from "./routes/About.svelte";
 	
 	import { io } from "socket.io-client";
+
+
+	if (window.location.hostname == "localhost" ||window.location.hostname == "127.0.0.1" ){
+		console.log("In development mode");
+
+	}
 	let socket = io('http://localhost:6969');
 	window.socket = socket;
 	
@@ -16,15 +22,29 @@
 	export let url = "";
 </script>
   
-  <Router url="{url}">
-	<nav>
-	  <Link to="/">Home</Link>
-	  <Link to="about">About</Link>
-	  
+<Router url="{url}">
+	<nav id = "navbar">
+		<Link to="/">Home</Link>
+		| 
+		<Link to="about">About</Link>
+		
 	</nav>
-	<div>
-	  
-	  <Route path="about"><About/> </Route>
-	  <Route path="/"><Home /></Route>
-	</div>
-  </Router>
+	
+	<main>
+		<Route path="about"><About/> </Route>
+		<Route path="/"><Home /></Route>
+	</main>
+	
+</Router>
+
+<style>
+	nav{
+		text-align: center;
+	}
+	main {
+		width : 100%;
+		/* border : 1px solid red; */
+		text-align : center;
+	}
+
+</style>
