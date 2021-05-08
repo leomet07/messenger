@@ -1,5 +1,6 @@
 <script>
 	import { messages } from '../stores';
+	
 	let input_message;
 
 	(async function () {
@@ -14,6 +15,10 @@
 			$messages = [...$messages, data];
 			
 			console.log(messages)
+
+			scroll_to_bottom()
+
+		
 		});
   	
 	}());
@@ -22,15 +27,27 @@
 		e.preventDefault()
 		console.log("Clicked")
 		window.socket.emit("create_message", {text : input_message})
+		input_message = "";
 	}
+	function scroll_to_bottom(){
+		let element = document.getElementById("messages");
+    	element.scrollTop = element.scrollHeight ;
+		
+
+		
+	}
+	
+
 </script>
 
 <main id ="main">
 	<h1 id="quirky">Home</h1>
-	<div>
+	<div id = "messages" >
 	{#each $messages as message}
 		<p>{message.text}</p>
+		
 	{/each}
+	
 	</div>
 	<form on:submit={create_message} >
 		<input bind:value={input_message} />
@@ -42,5 +59,9 @@
 
 
 <style>
-
+#messages{
+	height : 75vh;
+	overflow: scroll;
+	padding-bottom: 66px;
+}
 </style>
