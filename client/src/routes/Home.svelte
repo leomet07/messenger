@@ -41,12 +41,13 @@
 </script>
 
 <main id ="main">
-	<h1 id="quirky">Home</h1>
+	<h1 id="title">Home</h1>
 	<div id = "messages" >
-	{#each $messages as message}
-		<p>{message.text}</p>
-		
-	{/each}
+	<ul>
+		{#each $messages as message}
+			<li class="message">{message.text}</li>
+		{/each}
+	</ul>
 	
 	</div>
 	<form on:submit={create_message} >
@@ -59,9 +60,34 @@
 
 
 <style>
+#title{
+	display: none;
+}
 #messages{
 	height : 75vh;
 	overflow: scroll;
 	padding-bottom: 66px;
+	text-align: left;
+	padding-left: 15px  ;
+	-ms-overflow-style: none;  /* IE and Edge */
+  	scrollbar-width: none;  /* Firefox */
 }
+
+#messages::-webkit-scrollbar {
+  display: none; /* Chrome (based) */
+}
+
+@media only screen and (min-height: 880px) {
+	
+	#title{
+		display: block;
+	}
+}
+
+.message{
+	margin-bottom: 0;
+	margin-top: 0;
+}
+
+
 </style>
