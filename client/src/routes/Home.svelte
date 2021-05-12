@@ -56,8 +56,8 @@
 	
 	</div>
 	<form on:submit={create_message} >
-		<input bind:value={input_message} />
-		<input type= "submit" text="Send"/>
+		<input id = "message_draft_box" bind:value={input_message} />
+		<input type="submit" id = "submit_button" text="Send"/>
 			
 		
 	</form>
@@ -68,6 +68,7 @@
 #title{
 	display: none;
 }
+
 #messages{
 	height : 75vh;
 	overflow: scroll;
@@ -94,5 +95,14 @@
 	margin-top: 0;
 }
 
+#message_draft_box{
+	width: 85vw;
+	margin-bottom: 0;
+	border : 1px solid black;
+}
+
+#submit_button{
+	border : 1px solid black;
+}
 
 </style>
