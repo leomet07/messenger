@@ -2,11 +2,12 @@
 	import { messages } from '../stores';
 	
 	let input_message;
+	let room = null;
+	let room_form;
 
 	(async function () {
 		console.log("On home")
-		const retrieved_messages = (await(await fetch(window.BASE_URL + "/api/db/get_messages")).json()).messages;
-		$messages = retrieved_messages;
+		
 	
 		
 		window.socket.on("new_message",  (data) => {
@@ -20,9 +21,10 @@
 
 		
 		});
-		window.socket.on("deleted_message",  (deleted_message_id) => {
-			console.log("deleted message, id: ", deleted_message_id)
-			$messages = $messages.filter(message => message._id != deleted_message_id)
+		window.socket.on("all_messages",  (all_messages) => {
+			console.log("all_messages")
+			$messages = all_messages;
+			
 
 		});
   	
@@ -34,12 +36,34 @@
 		window.socket.emit("create_message", {text : input_message})
 		input_message = "";
 	}
+	async function join_room(e){
+		e.preventDefault()
+		console.log("Join room: ", room_form)
+		
+		window.socket.emit("room", room_form);
+		const recieved_messages =  await get_messages_http(room_form)
+		console.log(recieved_messages)
+		$messages =recieved_messages;
+		room = room_form;
+	}
 	function scroll_to_bottom(){
 		let element = document.getElementById("messages");
-    	element.scrollTop = element.scrollHeight ;
-		
+    	element.scrollTop = element.scrollHeight ;		
+	}
 
-		
+	async function get_messages_http(room){
+		const response = await fetch(window.BASE_URL + "/api/db/get_messages", {
+		"method": "POST",
+		"headers": {
+			"Content-Type": "application/json"
+		},
+		"body": JSON.stringify({room})
+		});
+
+		let json = await response.json();
+
+		return json.messages;
+	
 	}
 	
 
@@ -55,12 +79,22 @@
 	</ul>
 	
 	</div>
-	<form on:submit={create_message} >
-		<input id = "message_draft_box" bind:value={input_message} />
-		<input type="submit" id = "submit_button" text="Send"/>
+	{#if room}
+		<form on:submit={create_message} >
+			<input id = "message_draft_box" bind:value={input_message} />
+			<input type="submit" id = "submit_button" value="Send"/>
+				
 			
-		
-	</form>
+		</form>
+	{:else}
+		<form on:submit={join_room} >
+			<input id = "message_draft_box" bind:value={room_form} />
+			<input type="submit" id = "submit_button" value="Join"/>
+				
+			
+		</form>
+	{/if}
+	
 </main>
 
 

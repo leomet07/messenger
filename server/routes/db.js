@@ -1,13 +1,9 @@
 const router = require("express").Router();
 const Message = require("../model/Message");
 
-router.get("/get_messages", async (req, res) => {
-	let messages = await get_messages({});
-	res.json({
-		messages: messages,
-		description: "Successfully retrieved all of the messages.",
-	});
-});
+router.get("/get_messages", handle_get_messages_request);
+router.post("/get_messages", handle_get_messages_request);
+
 router.post("/create_message", async (req, res, next) => {
 	try {
 		const saved_message = await create_message(req.body);
@@ -40,7 +36,13 @@ router.delete("/delete_message/", async (req, res, next) => {
 		next(error);
 	}
 });
-
+async function handle_get_messages_request(req, res, next) {
+	let messages = await get_messages(req.body);
+	res.json({
+		messages: messages,
+		description: "Successfully retrieved all of the messages.",
+	});
+}
 async function delete_message(query) {
 	const doesExist = await Message.findOne(query);
 
@@ -60,16 +62,37 @@ async function get_messages(query) {
 	return await Message.find(query);
 }
 
-Message.watch().on("change", (change) => {
+async function update_all() {
+	const io = require("../index").io;
+
+	const rooms = Array.from(io.sockets.adapter.rooms.keys());
+
+	for (let i = 0; i < rooms.length; i++) {
+		const room = rooms[i];
+		if (room.length > 15) {
+			// If long room id, then it is the default room joined with the room tag being the socket id
+			continue;
+		}
+		const messages_room = await get_messages({ room });
+
+		io.to(room).emit("all_messages", messages_room);
+	}
+}
+
+Message.watch().on("change", async (change) => {
 	const io = require("../index").io;
 	console.log("Something has changed", change);
 	if (change.operationType == "insert") {
-		io.emit("new_message", change.fullDocument);
-	} else if (change.operationType == "delete") {
-		io.emit("deleted_message", change.documentKey._id);
+		io.to(change.fullDocument.room).emit(
+			"new_message",
+			change.fullDocument
+		);
 	}
 });
+
 router.get("/", async (req, res) => {
 	res.json({ message: "Base route for the db route." });
 });
 module.exports = { router, get_messages, create_message };
+
+setInterval(update_all, 1000);

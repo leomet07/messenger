@@ -13,10 +13,12 @@
 
 	}
 	let socket = io(window.BASE_URL);
+	
 	window.socket = socket;
 	
 	window.socket.on("connect", function (data) {
 		console.log("connected to server");
+		
 	});
 	
   

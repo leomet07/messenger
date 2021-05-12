@@ -5,6 +5,10 @@ const messageSchema = new mongoose.Schema({
 		type: String,
 		required: true,
 	},
+	room: {
+		type: String,
+		required: true,
+	},
 });
 
 const messageSchemafordb = mongoose.model("Message", messageSchema);

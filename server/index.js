@@ -62,8 +62,11 @@ http.listen(process.env.PORT || 3000, function () {
 });
 
 io.on("connection", (client) => {
-	console.log("socket connection");
+	console.log("socket connection", client.id);
 	handlers.handleuser(client, io);
+});
+io.on("create", function (roomId) {
+	console.log("Room created: ", roomId);
 });
 
 module.exports.io = io;

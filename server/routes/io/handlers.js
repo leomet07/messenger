@@ -6,9 +6,16 @@ async function handleuser(user, io) {
 		console.log("user disconnected");
 	});
 
-	user.on("create_message", async (data) => {
-		console.log("create message handler file", data);
-		let saved_message = await db.create_message(data);
+	// once a client has connected, we expect to get a ping from them saying what room they want to join
+	user.on("room", function (room) {
+		console.log("Client joined room. ID: ", room);
+		user.join(room);
+
+		user.on("create_message", async (data) => {
+			console.log("create message handler file", data);
+			console.log("New message in room: ", room);
+			let saved_message = await db.create_message({ ...data, room });
+		});
 	});
 }
 
