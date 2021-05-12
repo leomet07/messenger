@@ -65,6 +65,8 @@ Message.watch().on("change", (change) => {
 	console.log("Something has changed", change);
 	if (change.operationType == "insert") {
 		io.emit("new_message", change.fullDocument);
+	} else if (change.operationType == "delete") {
+		io.emit("deleted_message", change.documentKey._id);
 	}
 });
 router.get("/", async (req, res) => {

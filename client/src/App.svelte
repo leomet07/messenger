@@ -7,7 +7,7 @@
 	import { io } from "socket.io-client";
 
 	window.BASE_URL = "https://discordmessengerbackend.herokuapp.com"
-	if (window.location.hostname == "localhost" ||window.location.hostname == "127.0.0.1" ){
+	if (window.location.hostname == "localhost" || window.location.hostname == "127.0.0.1" ){
 		console.log("In development mode");
 		window.BASE_URL = "http://localhost:6969"
 

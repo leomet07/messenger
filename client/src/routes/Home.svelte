@@ -20,6 +20,11 @@
 
 		
 		});
+		window.socket.on("deleted_message",  (deleted_message_id) => {
+			console.log("deleted message, id: ", deleted_message_id)
+			$messages = $messages.filter(message => message._id != deleted_message_id)
+
+		});
   	
 	}());
 
