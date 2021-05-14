@@ -1,8 +1,8 @@
 <script>
-	import { messages } from '../stores';
+	import { messages, room } from '../stores';
 	
 	let input_message;
-	let room = null;
+	
 	let room_form;
 
 	(async function () {
@@ -44,20 +44,20 @@
 		const recieved_messages =  await get_messages_http(room_form)
 		console.log(recieved_messages)
 		$messages =recieved_messages;
-		room = room_form;
+		$room = room_form;
 	}
 	function scroll_to_bottom(){
 		let element = document.getElementById("messages");
     	element.scrollTop = element.scrollHeight ;		
 	}
 
-	async function get_messages_http(room){
+	async function get_messages_http(room_selected){
 		const response = await fetch(window.BASE_URL + "/api/db/get_messages", {
 		"method": "POST",
 		"headers": {
 			"Content-Type": "application/json"
 		},
-		"body": JSON.stringify({room})
+		"body": JSON.stringify({room_selected})
 		});
 
 		let json = await response.json();
@@ -79,7 +79,7 @@
 	</ul>
 	
 	</div>
-	{#if room}
+	{#if $room}
 		<form on:submit={create_message} >
 			<input id = "message_draft_box" bind:value={input_message} />
 			<input type="submit" id = "submit_button" value="Send"/>
